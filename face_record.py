@@ -9,14 +9,14 @@ import time
 from sklearn.metrics import pairwise
 
 r = redis.Redis(
-    host='redis-12590.c8.us-east-1-2.ec2.redns.redis-cloud.com',
-    port = '12590',
-    password='QaC4ZwTRbTUDJWFMyhgsHpwSvtz2oz4h'
+    host='redis-18931.c341.af-south-1-1.ec2.cloud.redislabs.com',
+    port = '18931',
+    password='ySYKDLpwfMTQVIVqdpfIRUHAa1WMwR5F'
 )
 
 # Retrieve Data from Database
 def retrieve_data():
-    retrieve_dict = r.hgetall(name='NHS-free-db')
+    retrieve_dict = r.hgetall(name='emma')
     if not retrieve_dict:
         print("No data found in Redis.")
         return pd.DataFrame(columns=['Name', 'Role', 'Facial Features', 'Course'])  # Include 'Course' column
@@ -47,21 +47,19 @@ def retrieve_data():
     return retrieve_df[['Name', 'Role', 'Facial Features', 'Course']]
 
 # Call the function to see the output
-# print(retrieve_data())
+print(retrieve_data())
 
 
 # Call the function to see the output
-# print(retrieve_data())
+print(retrieve_data())
 
 
 
 
 
 #Configur face analysis
-faceapp = FaceAnalysis(name='buffalo_s', 
-                      root='buffalo_s',
-                      providers=['CPUExecutionProvider'])
-faceapp.prepare(ctx_id=0, det_size=(320,320))
+faceapp = FaceAnalysis(name='buffalo_s', root='buffalo_s',providers=['CPUExecutionProvider'])
+faceapp.prepare(ctx_id=0,det_size=(640,640), det_thresh=0.5)
 
 # ML search algorithgm
 import numpy as np
@@ -108,7 +106,7 @@ class RealTimer:
                 concat_string = f"{name}@{role}@{course}@{ctime}"
                 encoded_data.append(concat_string)
         if len(encoded_data) > 0:
-            r.lpush('NHS-free-db:logs', *encoded_data)
+            r.lpush('emma:logs', *encoded_data)
         self.reset()
 
 
@@ -191,7 +189,7 @@ class RegistrationForm:
         x_mean_bytes = x_mean.tobytes()
 
         # Push to Redis
-        r.hset(name='NHS-free-db',key=key,value=x_mean_bytes)
+        r.hset(name='emma',key=key,value=x_mean_bytes)
 
         os.remove('face_embedding.txt')
         self.resetVid()

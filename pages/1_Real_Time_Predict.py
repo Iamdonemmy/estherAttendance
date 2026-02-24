@@ -4,6 +4,13 @@ import face_record
 from streamlit_webrtc import webrtc_streamer
 import av
 import time
+# Add at the top of each page file
+# from utils.auth import init_session_state
+# init_session_state()
+#
+# if not st.session_state.get('authenticated', False):
+#     st.warning("Please login to access this page")
+#     st.stop()  # Stop execution if not authenticated
 
 st.subheader("Real Time Prediction")
 
@@ -32,7 +39,4 @@ def video_frame_callback(frame):
 
     return av.VideoFrame.from_ndarray(predd_img, format="bgr24")
 
-webrtc_streamer(key="realtimePrediction", video_frame_callback=video_frame_callback,
-                rtc_configuration={
-        "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
-    })
+webrtc_streamer(key="realtimePrediction", video_frame_callback=video_frame_callback)

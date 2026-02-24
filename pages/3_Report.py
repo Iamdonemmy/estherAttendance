@@ -1,20 +1,13 @@
 import pandas as pd
 import streamlit as st
 import face_record
-# Add at the top of each page file
-# from utils.auth import init_session_state
-# init_session_state()
-#
-# if not st.session_state.get('authenticated', False):
-#     st.warning("Please login to access this page")
-#     st.stop()  # Stop execution if not authenticated
 
 st.set_page_config(page_title="Reporting..", layout='wide')
 st.subheader("Report Page")
 
 
 # Retrieve Logs
-def load_logs(name='emma:logs'):
+def load_logs(name='NHS-free-db:logs'):
     loglist = face_record.r.lrange(name, start=0, end=-1)  # Extract all data
     return loglist
 
